@@ -10,7 +10,7 @@ import {
   } from './slice';
 import { IPet } from './interfaces';
 import { petsFixture } from './fixtures';
-import { RootState } from 'app/store';
+import { RootState } from 'app/helpers';
 
 const mockStore = configureStore<RootState, ThunkDispatch<RootState, unknown, Action<string>>>([thunk]);
 const store = mockStore({ pets: initialState });
@@ -66,7 +66,7 @@ describe('pets reducer', () => {
     const newPet: IPet = {
       id: 4,
       name: 'PT',
-      age: 12,
+      age: '12',
       type: 'Dog'
     };
 

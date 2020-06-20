@@ -12,16 +12,13 @@ describe('add pets', () => {
       const { store } = renderWithProviders(<AddPets />, { pets: initialState });
 
       fireEvent.change(screen.getByTestId('name'), { target: { value: 'Pat' } });
-      fireEvent.change(screen.getByTestId('age'), { target: { value: 7 } });
+      fireEvent.change(screen.getByTestId('age'), { target: { value: '7' } });
       fireEvent.change(screen.getByTestId('type'), { target: { value: 'Cat' } });
       fireEvent.click(screen.getByText('Submit'));
 
       return store;
     });
 
-    const actions = store.getActions();
-
-    expect(actions[0].type).toEqual(addPet.type);
-    expect(actions[0].payload).toEqual({ id: 1, name: 'Pat', age: '7', type: 'Cat' });
+    expect(store.dispatch).toHaveBeenCalledWith(addPet({ id: 1, name: 'Pat', age: '7', type: 'Cat' }));
   });
 });

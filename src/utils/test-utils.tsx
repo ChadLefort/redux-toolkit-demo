@@ -1,69 +1,44 @@
-import configureStore, { MockStore } from 'redux-mock-store';
 import React from 'react';
-import thunk, { ThunkDispatch } from 'redux-thunk';
 import { act, render } from '@testing-library/react';
-import { Action } from 'redux';
+import { configureStore, Dispatch } from '@reduxjs/toolkit';
 import { MemoryRouter as Router } from 'react-router-dom';
+import { petsReducer } from 'features/pets/slice';
 import { Provider } from 'react-redux';
-import { RenderResult } from '@testing-library/react';
-import {
-  RootState,
-  store as oldStore,
-  useAppDispatch,
-  useTypedSelector
-  } from 'app/store';
+import { RootState } from 'app/helpers';
+import { store as origStore } from 'app/store';
 import '@testing-library/jest-dom/extend-expect';
 
-// jest.mock('app/store', () => ({
-//   store: jest.fn(),
-//   useAppDispatch: jest.fn(),
-//   useTypedSelector: jest.fn()
-// }));
+jest.mock('app/store', () => ({
+  store: jest.fn()
+}));
 
-// export const renderWithProviders = (
-//   ui: React.ReactElement,
-//   initialState: Partial<RootState>,
-//   initialEntries?: string[],
-//   initialStore?: any,
-//   renderFn = render
-// ) => {
-//   const mockStore = configureStore<Partial<RootState>, ThunkDispatch<Partial<RootState>, unknown, Action<string>>>([
-//     thunk
-//   ]);
-//   const store = initialStore || mockStore(initialState);
+function configureTestStore(initialState: Partial<RootState> = {}) {
+  const store = configureStore({ reducer: { pets: petsReducer }, preloadedState: initialState });
+  const origDispatch = store.dispatch as jest.Mock;
 
-//   beforeEach(() => {
-//     store.clearActions();
-//   });
+  store.dispatch = jest.fn(origDispatch);
+  origStore.getState = () => store.getState();
 
-//   oldStore.getState = () => store.getState();
+  return store;
+}
 
-//   const mockUseSelector = useTypedSelector as jest.Mock;
-//   const mockUseDispatch = useAppDispatch as jest.Mock;
+export function renderWithProviders(
+  ui: React.ReactElement,
+  initialState: Partial<RootState>,
+  initialEntries?: string[],
+  store = configureTestStore(initialState),
+  rtlRender = render
+) {
+  const Wrapper: React.FC = ({ children }) => (
+    <Provider store={store}>
+      <Router initialEntries={initialEntries}>{children}</Router>
+    </Provider>
+  );
 
-//   mockUseDispatch.mockImplementation(() => store.dispatch);
-//   mockUseSelector.mockImplementation((callback) => callback(store.getState()));
+  return { ...rtlRender(ui, { wrapper: Wrapper }), store };
+}
 
-//   const testingNode: RenderResult & {
-//     store: MockStore<Partial<RootState>>;
-//     rerenderWithProviders?: (ui: React.ReactElement, newState: Partial<RootState>) => RenderResult;
-//     rerender?: (ui: React.ReactElement) => any;
-//   } = {
-//     ...renderFn(
-//       <Provider store={store}>
-//         <Router initialEntries={initialEntries}>{ui}</Router>
-//       </Provider>
-//     ),
-//     store
-//   };
-
-//   testingNode.rerenderWithProviders = (ui: React.ReactElement, newState: Partial<RootState>) =>
-//     renderWithProviders(ui, newState, initialEntries, store, testingNode.rerender);
-
-//   return testingNode;
-// };
-
-export async function actWithReturn<T = MockStore>(callback: Function) {
+export async function actWithReturn<T = typeof origStore>(callback: Function) {
   let ret;
 
   await act(async () => {
@@ -71,6 +46,11 @@ export async function actWithReturn<T = MockStore>(callback: Function) {
   });
 
   return (ret as unknown) as T;
+}
+
+export async function getActionResult<T = any>(dispatch: Dispatch) {
+  const mockDispatch = dispatch as jest.Mock;
+  return (await mockDispatch.mock.results[0].value) as { type: string; payload: T };
 }
 
 export * from '@testing-library/react';

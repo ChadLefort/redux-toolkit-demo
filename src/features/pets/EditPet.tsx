@@ -11,8 +11,9 @@ import {
   } from '@material-ui/core';
 import { IPet } from './interfaces';
 import { PetForm } from './Form';
-import { store, useAppDispatch } from 'app/store';
+import { store } from 'app/store';
 import { updatePet } from './slice';
+import { useAppDispatch } from 'app/helpers';
 import { useFetchPets } from './useFetchPets';
 import { useHistory, useParams } from 'react-router-dom';
 

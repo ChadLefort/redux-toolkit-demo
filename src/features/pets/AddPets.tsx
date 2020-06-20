@@ -10,7 +10,8 @@ import {
   } from '@material-ui/core';
 import { IPet } from './interfaces';
 import { PetForm } from './Form';
-import { RootState, store, useAppDispatch } from 'app/store';
+import { RootState, useAppDispatch } from 'app/helpers';
+import { store } from 'app/store';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>

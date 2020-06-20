@@ -1,6 +1,6 @@
 export interface IPet {
   id: number;
   name: string;
-  age: number;
+  age: string;
   type: 'Cat' | 'Dog' | 'Other';
 }

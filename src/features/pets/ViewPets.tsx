@@ -22,7 +22,7 @@ import {
   } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { removePet } from './slice';
-import { useAppDispatch } from 'app/store';
+import { useAppDispatch } from 'app/helpers';
 import { useFetchPets } from './useFetchPets';
 
 const useStyles = makeStyles((theme: Theme) =>
