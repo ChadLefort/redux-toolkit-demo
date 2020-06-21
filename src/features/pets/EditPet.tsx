@@ -1,19 +1,19 @@
 import React from 'react';
 import {
-  Container,
-  createStyles,
-  Grid,
-  LinearProgress,
-  makeStyles,
-  Paper,
-  Theme,
-  Typography
-  } from '@material-ui/core';
+    Container,
+    createStyles,
+    Grid,
+    LinearProgress,
+    makeStyles,
+    Paper,
+    Theme,
+    Typography
+    } from '@material-ui/core';
 import { IPet } from './interfaces';
 import { PetForm } from './Form';
 import { store } from 'app/store';
 import { updatePet } from './slice';
-import { useAppDispatch } from 'app/helpers';
+import { useAppDispatch } from 'app/reducer';
 import { useFetchPets } from './useFetchPets';
 import { useHistory, useParams } from 'react-router-dom';
 

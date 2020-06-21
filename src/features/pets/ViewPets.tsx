@@ -2,27 +2,27 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
 import {
-  Button,
-  Container,
-  createStyles,
-  Grid,
-  IconButton,
-  LinearProgress,
-  Link as MuiLink,
-  makeStyles,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Theme,
-  Typography
-  } from '@material-ui/core';
+    Button,
+    Container,
+    createStyles,
+    Grid,
+    IconButton,
+    LinearProgress,
+    Link as MuiLink,
+    makeStyles,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Theme,
+    Typography
+    } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { removePet } from './slice';
-import { useAppDispatch } from 'app/helpers';
+import { useAppDispatch } from 'app/reducer';
 import { useFetchPets } from './useFetchPets';
 
 const useStyles = makeStyles((theme: Theme) =>

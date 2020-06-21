@@ -1,9 +1,16 @@
-import React from 'react';
-import { Button, Grid, makeStyles, Theme, createStyles, MenuItem } from '@material-ui/core';
-import { Form } from 'react-final-form';
-import { TextField, Select, makeValidate } from 'mui-rff';
 import * as Yup from 'yup';
+import React from 'react';
+import {
+  Button,
+  createStyles,
+  Grid,
+  makeStyles,
+  MenuItem,
+  Theme
+  } from '@material-ui/core';
+import { Form } from 'react-final-form';
 import { IPet } from './interfaces';
+import { makeValidate, Select, TextField } from 'mui-rff';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Name is a required field.'),
-  age: Yup.number().required('Age is a required field.'),
+  age: Yup.string().required('Age is a required field.'),
   type: Yup.string().required('Type is a required field.')
 });
 
@@ -45,7 +52,6 @@ export const PetForm: React.FC<Props> = ({ onSubmit, initialValues }) => {
                 type="text"
                 required
                 inputProps={{ 'data-testid': 'name' }}
-                placeholder="Name"
               />
             </Grid>
             <Grid item xs={12}>

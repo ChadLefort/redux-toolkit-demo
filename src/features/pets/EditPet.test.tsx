@@ -2,7 +2,7 @@ import React from 'react';
 import { actWithReturn, renderWithProviders } from 'utils/test-utils';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { EditPet } from './EditPet';
-import { RootState } from 'app/helpers';
+import { RootState } from 'app/store';
 import { Route } from 'react-router-dom';
 import { updatePet } from './slice';
 
@@ -25,7 +25,7 @@ describe('edit pet', () => {
     const store = await actWithReturn(async () => {
       const { store } = renderWithProviders(<Route path="/edit/:id" component={EditPet} />, initialState, ['/edit/1']);
 
-      fireEvent.change(screen.getByTestId('age'), { target: { value: 8 } });
+      fireEvent.change(screen.getByTestId('age'), { target: { value: '8' } });
       fireEvent.click(screen.getByText('Submit'));
 
       return store;

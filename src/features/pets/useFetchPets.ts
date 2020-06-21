@@ -1,6 +1,6 @@
 import { fetchPets, petsAdapter } from './slice';
-import { RootState, useAppDispatch, useTypedSelector } from 'app/helpers';
-import { store } from 'app/store';
+import { RootState, store } from 'app/store';
+import { useAppDispatch, useTypedSelector } from 'app/reducer';
 import { useEffect } from 'react';
 
 export function useFetchPets() {

@@ -2,10 +2,9 @@ import React from 'react';
 import { act, render } from '@testing-library/react';
 import { configureStore, Dispatch } from '@reduxjs/toolkit';
 import { MemoryRouter as Router } from 'react-router-dom';
-import { petsReducer } from 'features/pets/slice';
 import { Provider } from 'react-redux';
-import { RootState } from 'app/helpers';
-import { store as origStore } from 'app/store';
+import { reducer } from 'app/reducer';
+import { RootState, store as origStore } from 'app/store';
 import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('app/store', () => ({
@@ -13,7 +12,7 @@ jest.mock('app/store', () => ({
 }));
 
 function configureTestStore(initialState: Partial<RootState> = {}) {
-  const store = configureStore({ reducer: { pets: petsReducer }, preloadedState: initialState });
+  const store = configureStore({ reducer, preloadedState: initialState });
   const origDispatch = store.dispatch as jest.Mock;
 
   store.dispatch = jest.fn(origDispatch);
@@ -52,5 +51,7 @@ export async function getActionResult<T = any>(dispatch: Dispatch) {
   const mockDispatch = dispatch as jest.Mock;
   return (await mockDispatch.mock.results[0].value) as { type: string; payload: T };
 }
+
+export const HooksWrapper: React.FC = ({ children }) => <Provider store={configureTestStore()}>{children}</Provider>;
 
 export * from '@testing-library/react';

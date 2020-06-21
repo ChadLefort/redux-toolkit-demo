@@ -2,10 +2,11 @@ import React from 'react';
 import { cleanup, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import { fetchPets, initialState, removePet } from './slice';
 import { getActionResult, renderWithProviders, screen } from '../../utils/test-utils';
+import { IPet } from './interfaces';
 import { petsFixture } from './fixtures';
 import { ViewPets } from './ViewPets';
 
-describe('view pets with real store', () => {
+describe('view pets', () => {
   afterEach(cleanup);
 
   it('can show a loading bar and then pets', async () => {
@@ -17,7 +18,7 @@ describe('view pets with real store', () => {
 
     expect(screen.getByText(petsFixture[0].name)).toHaveTextContent(petsFixture[0].name);
 
-    const { type } = await getActionResult(store.dispatch);
+    const { type } = await getActionResult<IPet[]>(store.dispatch);
     expect(type).toEqual(fetchPets.fulfilled.type);
   });
 
@@ -28,7 +29,7 @@ describe('view pets with real store', () => {
 
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
-    fireEvent.click(screen.getByTestId('Daisy-delete'));
+    fireEvent.click(screen.getByTestId(`${petsFixture[1].name}-delete`));
 
     expect(screen.queryByText(petsFixture[1].name)).toBeNull();
     expect(store.dispatch).toHaveBeenCalledWith(removePet(2));
