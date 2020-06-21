@@ -1,3 +1,5 @@
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { cleanup, fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import { fetchPets, initialState, removePet } from './slice';
@@ -6,7 +8,14 @@ import { IPet } from './interfaces';
 import { petsFixture } from './fixtures';
 import { ViewPets } from './ViewPets';
 
+const axiosMock = new MockAdapter(axios);
+
 describe('view pets', () => {
+  beforeEach(() => {
+    axiosMock.reset();
+    axiosMock.onGet('/pets').reply(200, petsFixture);
+  });
+
   afterEach(cleanup);
 
   it('can show a loading bar and then pets', async () => {

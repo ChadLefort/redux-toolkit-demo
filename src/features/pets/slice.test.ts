@@ -1,4 +1,6 @@
+import axios from 'axios';
 import configureStore from 'redux-mock-store';
+import MockAdapter from 'axios-mock-adapter';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import {
@@ -15,14 +17,18 @@ import { RootState } from 'app/store';
 const mockStore = configureStore<RootState, ThunkDispatch<RootState, unknown, Action<string>>>([thunk]);
 const store = mockStore({ pets: initialState });
 let prevState: typeof initialState;
+const axiosMock = new MockAdapter(axios);
 
 beforeEach(() => {
+  axiosMock.reset();
   store.clearActions();
   prevState = initialState;
 });
 
 describe('pets actions', () => {
   it('dipatches a success action when fetching pets', async () => {
+    axiosMock.onGet('/pets').reply(200, petsFixture);
+
     await store.dispatch(fetchPets());
 
     const actions = store.getActions();

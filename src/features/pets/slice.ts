@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   createAsyncThunk,
   createEntityAdapter,
@@ -5,8 +6,6 @@ import {
   SerializedError
   } from '@reduxjs/toolkit';
 import { IPet } from './interfaces';
-import { petsFixture } from './fixtures';
-import { sleep } from 'utils/sleep';
 
 export type State = {
   hasFetched: boolean;
@@ -15,8 +14,8 @@ export type State = {
 };
 
 export const fetchPets = createAsyncThunk('pets/fetchPets', async () => {
-  await sleep(500);
-  return petsFixture;
+  const { data } = await axios.get<IPet[]>('/pets');
+  return data;
 });
 
 export const petsAdapter = createEntityAdapter<IPet>({
