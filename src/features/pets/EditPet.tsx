@@ -1,14 +1,14 @@
 import React from 'react';
 import {
-    Container,
-    createStyles,
-    Grid,
-    LinearProgress,
-    makeStyles,
-    Paper,
-    Theme,
-    Typography
-    } from '@material-ui/core';
+  Container,
+  createStyles,
+  Grid,
+  LinearProgress,
+  makeStyles,
+  Paper,
+  Theme,
+  Typography
+  } from '@material-ui/core';
 import { IPet } from './interfaces';
 import { PetForm } from './Form';
 import { store } from 'app/store';
@@ -37,10 +37,15 @@ export const EditPet: React.FC = () => {
   const pet = petsSelectors.selectById(store.getState(), id);
 
   const onSubmit = (values: IPet) =>
-    new Promise<void>((resolve) => {
-      dispatch(updatePet({ id: values.id, changes: values }));
-      history.push('/');
-      resolve();
+    new Promise<void>((resolve, reject) => {
+      try {
+        dispatch(updatePet(values));
+        history.push('/');
+        resolve();
+      } catch (error) {
+        console.error(error);
+        reject(error);
+      }
     });
 
   return pet && !isFetching ? (

@@ -18,6 +18,7 @@ const mockStore = configureStore<RootState, ThunkDispatch<RootState, unknown, Ac
 const store = mockStore({ pets: initialState });
 let prevState: typeof initialState;
 const axiosMock = new MockAdapter(axios);
+const error = new Error('test error');
 
 beforeEach(() => {
   axiosMock.reset();
@@ -42,7 +43,7 @@ describe('pets actions', () => {
 });
 
 describe('pets reducer', () => {
-  it('pets/fetchPets/pending', () => {
+  test('pets/fetchPets/pending', () => {
     const nextState = petsReducer(prevState, fetchPets.pending);
 
     expect(prevState.isFetching).toBeFalsy();
@@ -50,7 +51,7 @@ describe('pets reducer', () => {
     expect(nextState.error).toBeNull();
   });
 
-  it('pets/fetchPets/fulfilled', () => {
+  test('pets/fetchPets/fulfilled', () => {
     const nextState = petsReducer(prevState, fetchPets.fulfilled(petsFixture, '')); // second param requestID?
 
     expect(nextState.isFetching).toBeFalsy();
@@ -58,15 +59,22 @@ describe('pets reducer', () => {
     expect(nextState.error).toBeNull();
   });
 
-  it('pets/fetchPets/rejected', () => {
-    const error = new Error('test error');
+  test('pets/fetchPets/rejected', () => {
     const nextState = petsReducer(prevState, fetchPets.rejected(error, ''));
 
     expect(nextState.isFetching).toBeFalsy();
     expect(nextState.error?.message).toEqual(error.message);
   });
 
-  it('pets/addPet', () => {
+  test('pets/addPet/pending', () => {
+    const nextState = petsReducer(prevState, addPet.pending);
+
+    expect(prevState.isFetching).toBeFalsy();
+    expect(nextState.isFetching).toBeTruthy();
+    expect(nextState.error).toBeNull();
+  });
+
+  test('pets/addPet/fulfilled', () => {
     prevState = petsReducer(prevState, fetchPets.fulfilled(petsFixture, ''));
 
     const newPet: IPet = {
@@ -76,17 +84,43 @@ describe('pets reducer', () => {
       type: 'Dog'
     };
 
-    const nextState = petsReducer(prevState, addPet(newPet));
+    const nextState = petsReducer(prevState, addPet.fulfilled(newPet, '', newPet));
 
+    expect(nextState.isFetching).toBeFalsy();
     expect(Object.values(nextState.entities)).toEqual(petsFixture.concat(newPet));
+    expect(nextState.error).toBeNull();
   });
 
-  it('pets/removePet', () => {
+  test('pets/removePet/rejected', () => {
+    const nextState = petsReducer(prevState, fetchPets.rejected(error, ''));
+
+    expect(nextState.isFetching).toBeFalsy();
+    expect(nextState.error?.message).toEqual(error.message);
+  });
+
+  test('pets/addPet/pending', () => {
+    const nextState = petsReducer(prevState, addPet.pending);
+
+    expect(prevState.isFetching).toBeFalsy();
+    expect(nextState.isFetching).toBeTruthy();
+    expect(nextState.error).toBeNull();
+  });
+
+  test('pets/removePet/fulfilled', () => {
     prevState = petsReducer(prevState, fetchPets.fulfilled(petsFixture, ''));
 
-    const nextState = petsReducer(prevState, removePet(1));
+    const nextState = petsReducer(prevState, removePet.fulfilled(1, '', 1));
 
+    expect(nextState.isFetching).toBeFalsy();
     expect(Object.values(nextState.entities)[0]).not.toEqual(petsFixture[0]);
+    expect(nextState.error).toBeNull();
+  });
+
+  test('pets/removePet/rejected', () => {
+    const nextState = petsReducer(prevState, fetchPets.rejected(error, ''));
+
+    expect(nextState.isFetching).toBeFalsy();
+    expect(nextState.error?.message).toEqual(error.message);
   });
 
   // so on and so forth

@@ -32,6 +32,8 @@ describe('view pets', () => {
   });
 
   it('allows you to delete a pet', async () => {
+    axiosMock.onDelete(`/pets/${petsFixture[1].id}`).reply(200);
+
     const { store } = renderWithProviders(<ViewPets />, { pets: initialState });
 
     expect(screen.getByRole('progressbar')).toBeDefined();
@@ -41,6 +43,8 @@ describe('view pets', () => {
     fireEvent.click(screen.getByTestId(`${petsFixture[1].name}-delete`));
 
     expect(screen.queryByText(petsFixture[1].name)).toBeNull();
-    expect(store.dispatch).toHaveBeenCalledWith(removePet(2));
+
+    const { type } = await getActionResult(store.dispatch, 1);
+    expect(type).toEqual(removePet.fulfilled.type);
   });
 });

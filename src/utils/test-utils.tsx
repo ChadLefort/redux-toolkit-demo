@@ -47,9 +47,9 @@ export async function actWithReturn<T = typeof origStore>(callback: Function) {
   return (ret as unknown) as T;
 }
 
-export async function getActionResult<T = any>(dispatch: Dispatch) {
+export async function getActionResult<T = any>(dispatch: Dispatch, action: number = 0) {
   const mockDispatch = dispatch as jest.Mock;
-  return (await mockDispatch.mock.results[0].value) as { type: string; payload: T };
+  return (await mockDispatch.mock.results[action].value) as { type: string; payload?: T };
 }
 
 export const HooksWrapper: React.FC = ({ children }) => <Provider store={configureTestStore()}>{children}</Provider>;

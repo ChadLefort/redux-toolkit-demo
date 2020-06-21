@@ -1,5 +1,5 @@
 import React from 'react';
-import { addPet, petsAdapter } from './slice';
+import { addPet } from './slice';
 import {
   createStyles,
   Grid,
@@ -10,7 +10,6 @@ import {
   } from '@material-ui/core';
 import { IPet } from './interfaces';
 import { PetForm } from './Form';
-import { RootState, store } from 'app/store';
 import { useAppDispatch } from 'app/reducer';
 import { useHistory } from 'react-router-dom';
 
@@ -29,14 +28,17 @@ export const AddPets: React.FC = () => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const petsSelectors = petsAdapter.getSelectors<RootState>((state) => state.pets);
-  const pets = petsSelectors.selectTotal(store.getState());
 
   const onSubmit = (values: IPet) =>
-    new Promise<void>((resolve) => {
-      dispatch(addPet({ ...values, id: pets + 1 }));
-      history.push('/');
-      resolve();
+    new Promise<void>((resolve, reject) => {
+      try {
+        dispatch(addPet(values));
+        history.push('/');
+        resolve();
+      } catch (error) {
+        console.error(error);
+        reject(error);
+      }
     });
 
   return (
