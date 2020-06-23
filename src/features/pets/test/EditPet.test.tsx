@@ -2,18 +2,13 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { actWithReturn, getActionResult, renderWithProviders } from 'utils/test-utils';
-import {
-  cleanup,
-  fireEvent,
-  screen,
-  waitForElementToBeRemoved
-  } from '@testing-library/react';
+import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { EditPet } from '../EditPet';
-import { fetchPets, updatePet } from '../slice';
 import { IPet } from '../interfaces';
 import { petsFixture } from '../fixtures';
 import { RootState } from 'app/store';
 import { Route } from 'react-router-dom';
+import { updatePet } from '../slice';
 
 const axiosMock = new MockAdapter(axios);
 const initialState: Partial<RootState> = {
