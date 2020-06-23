@@ -1,18 +1,19 @@
 import React from 'react';
 import {
-  makeStyles,
-  Paper,
-  createStyles,
-  Theme,
   Container,
+  createStyles,
   LinearProgress,
   List,
   ListItem,
-  ListItemText
-} from '@material-ui/core';
+  ListItemText,
+  makeStyles,
+  Paper,
+  Theme
+  } from '@material-ui/core';
+import { ErrorIcon } from 'common/ErrorIcon';
 import { store } from 'app/store';
-import { useParams } from 'react-router-dom';
 import { useFetchPets } from './useFetchPets';
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,11 +30,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const ViewPet: React.FC = () => {
   const classes = useStyles();
-  const { petsSelectors, isFetching } = useFetchPets();
+  const { petsSelectors, isFetching, error } = useFetchPets();
   const { id } = useParams<{ id: string }>();
   const pet = petsSelectors.selectById(store.getState(), id);
 
-  return pet && !isFetching ? (
+  return pet && !isFetching && !error ? (
     <Paper className={classes.paper}>
       <List className={classes.list}>
         <ListItem>
@@ -47,6 +48,8 @@ export const ViewPet: React.FC = () => {
         </ListItem>
       </List>
     </Paper>
+  ) : error ? (
+    <ErrorIcon />
   ) : (
     <Container>
       <LinearProgress />

@@ -38,6 +38,26 @@ describe('pets actions', () => {
     expect(actions[1].payload).toEqual(petsFixture);
   });
 
+  it('dipatches a failure action for a 404 with a payload', async () => {
+    axiosMock.onGet('/pets').reply(404);
+    await store.dispatch(fetchPets());
+
+    const actions = store.getActions();
+
+    expect(actions[1].type).toEqual(fetchPets.rejected.type);
+    expect(actions[1].payload).toEqual('pets not found');
+  });
+
+  it('dipatches a failure action', async () => {
+    axiosMock.onGet('/pets').reply(500);
+    await store.dispatch(fetchPets());
+
+    const actions = store.getActions();
+
+    expect(actions[1].type).toEqual(fetchPets.rejected.type);
+    expect(actions[1].error.message).toEqual('Request failed with status code 500');
+  });
+
   // are these valable if using createAsyncThunk?
   // feels like we would just be testing that function and instead should focus on the results in the component
 });

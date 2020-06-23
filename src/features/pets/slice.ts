@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import {
   createAsyncThunk,
   createEntityAdapter,
@@ -14,9 +14,19 @@ export type State = {
   error: SerializedError | null;
 };
 
-export const fetchPets = createAsyncThunk<IPet[]>('pets/fetchPets', async () => {
-  const { data } = await axios.get<IPet[]>('/pets');
-  return data;
+export const fetchPets = createAsyncThunk<IPet[]>('pets/fetchPets', async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get<IPet[]>('/pets');
+    return data;
+  } catch (err) {
+    const error: AxiosError = err;
+
+    if (error.response?.status === 404) {
+      return rejectWithValue('pets not found');
+    } else {
+      throw error;
+    }
+  }
 });
 
 export const addPet = createAsyncThunk<IPet, IPet>('pets/addPet', async (pet) => {

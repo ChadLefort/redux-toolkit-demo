@@ -9,6 +9,7 @@ import {
   Theme,
   Typography
   } from '@material-ui/core';
+import { ErrorIcon } from 'common/ErrorIcon';
 import { IPet } from './interfaces';
 import { PetForm } from './Form';
 import { store } from 'app/store';
@@ -32,7 +33,7 @@ export const EditPet: React.FC = () => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const { petsSelectors, isFetching } = useFetchPets();
+  const { petsSelectors, isFetching, error } = useFetchPets();
   const { id } = useParams<{ id: string }>();
   const pet = petsSelectors.selectById(store.getState(), id);
 
@@ -48,7 +49,7 @@ export const EditPet: React.FC = () => {
       }
     });
 
-  return pet && !isFetching ? (
+  return pet && !isFetching && !error ? (
     <Paper className={classes.paper}>
       <Grid container justify="center" spacing={4}>
         <Grid item xs={12}>
@@ -61,6 +62,8 @@ export const EditPet: React.FC = () => {
         </Grid>
       </Grid>
     </Paper>
+  ) : error ? (
+    <ErrorIcon />
   ) : (
     <Container>
       <LinearProgress />

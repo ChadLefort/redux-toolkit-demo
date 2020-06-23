@@ -2,13 +2,18 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { actWithReturn, getActionResult, renderWithProviders } from 'utils/test-utils';
-import { cleanup, fireEvent, screen } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  screen,
+  waitForElementToBeRemoved
+  } from '@testing-library/react';
 import { EditPet } from '../EditPet';
+import { fetchPets, updatePet } from '../slice';
 import { IPet } from '../interfaces';
 import { petsFixture } from '../fixtures';
 import { RootState } from 'app/store';
 import { Route } from 'react-router-dom';
-import { updatePet } from '../slice';
 
 const axiosMock = new MockAdapter(axios);
 const initialState: Partial<RootState> = {
@@ -26,7 +31,6 @@ const initialState: Partial<RootState> = {
 describe('edit pet', () => {
   beforeEach(() => {
     axiosMock.reset();
-    axiosMock.onGet('/pets').reply(200, petsFixture);
   });
 
   afterEach(cleanup);
@@ -34,6 +38,7 @@ describe('edit pet', () => {
   it('should call dispatch pets/updatePet action when form is submitted', async () => {
     const updatedPet: IPet = { id: 1, name: 'Pat', age: '8', type: 'Cat' };
 
+    axiosMock.onGet('/pets').reply(200, petsFixture);
     axiosMock.onPut('/pets/1').reply(200, updatedPet);
 
     const store = await actWithReturn(async () => {

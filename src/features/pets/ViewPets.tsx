@@ -2,24 +2,25 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
 import {
-    Button,
-    Container,
-    createStyles,
-    Grid,
-    IconButton,
-    LinearProgress,
-    Link as MuiLink,
-    makeStyles,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Theme,
-    Typography
-    } from '@material-ui/core';
+  Button,
+  Container,
+  createStyles,
+  Grid,
+  IconButton,
+  LinearProgress,
+  Link as MuiLink,
+  makeStyles,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Theme,
+  Typography
+  } from '@material-ui/core';
+import { ErrorIcon } from 'common/ErrorIcon';
 import { Link } from 'react-router-dom';
 import { removePet } from './slice';
 import { useAppDispatch } from 'app/reducer';
@@ -44,9 +45,9 @@ export const ViewPets: React.FC = () => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const remove = (id: number) => () => dispatch(removePet(id));
-  const { pets, isFetching } = useFetchPets();
+  const { pets, isFetching, error } = useFetchPets();
 
-  return pets.length && !isFetching ? (
+  return pets.length && !isFetching && !error ? (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
@@ -80,7 +81,7 @@ export const ViewPets: React.FC = () => {
         </TableBody>
       </Table>
     </TableContainer>
-  ) : pets.length === 0 && !isFetching ? (
+  ) : pets.length === 0 && !isFetching && !error ? (
     <Paper className={classes.paper}>
       <Grid container spacing={4}>
         <Grid item xs={12} classes={{ root: classes.item }}>
@@ -93,6 +94,8 @@ export const ViewPets: React.FC = () => {
         </Grid>
       </Grid>
     </Paper>
+  ) : error ? (
+    <ErrorIcon />
   ) : (
     <Container>
       <LinearProgress />

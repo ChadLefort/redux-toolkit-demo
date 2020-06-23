@@ -34,4 +34,22 @@ describe('view pet', () => {
     const { type } = await getActionResult(store.dispatch);
     expect(type).toEqual(fetchPets.fulfilled.type);
   });
+
+  it('can show a loading bar and then an error', async () => {
+    axiosMock.onGet('/pets').reply(500);
+
+    const { store } = renderWithProviders(<Route path="/:id" component={ViewPet} />, {
+      initialState: { pets: initialState },
+      initialEntries: ['/1']
+    });
+
+    expect(screen.getByRole('progressbar')).toBeDefined();
+
+    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+
+    expect(screen.getByTitle('Error')).toBeDefined();
+
+    const { type } = await getActionResult(store.dispatch);
+    expect(type).toEqual(fetchPets.rejected.type);
+  });
 });

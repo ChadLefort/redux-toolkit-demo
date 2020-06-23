@@ -13,12 +13,13 @@ const axiosMock = new MockAdapter(axios);
 describe('view pets', () => {
   beforeEach(() => {
     axiosMock.reset();
-    axiosMock.onGet('/pets').reply(200, petsFixture);
   });
 
   afterEach(cleanup);
 
   it('can show a loading bar and then pets', async () => {
+    axiosMock.onGet('/pets').reply(200, petsFixture);
+
     const { store } = renderWithProviders(<ViewPets />, { initialState: { pets: initialState } });
 
     expect(screen.getByRole('progressbar')).toBeDefined();
@@ -31,7 +32,23 @@ describe('view pets', () => {
     expect(type).toEqual(fetchPets.fulfilled.type);
   });
 
+  it('can show a loading bar and an error icon', async () => {
+    axiosMock.onGet('/pets').reply(500);
+
+    const { store } = renderWithProviders(<ViewPets />, { initialState: { pets: initialState } });
+
+    expect(screen.getByRole('progressbar')).toBeDefined();
+
+    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+
+    expect(screen.getByTitle('Error')).toBeDefined();
+
+    const { type } = await getActionResult<IPet[]>(store.dispatch);
+    expect(type).toEqual(fetchPets.rejected.type);
+  });
+
   it('allows you to delete a pet', async () => {
+    axiosMock.onGet('/pets').reply(200, petsFixture);
     axiosMock.onDelete(`/pets/${petsFixture[1].id}`).reply(200);
 
     const { store } = renderWithProviders(<ViewPets />, { initialState: { pets: initialState } });
