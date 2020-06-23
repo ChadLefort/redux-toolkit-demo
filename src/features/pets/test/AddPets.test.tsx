@@ -2,10 +2,10 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { actWithReturn, getActionResult, renderWithProviders } from 'utils/test-utils';
-import { addPet, initialState } from './slice';
-import { AddPets } from './AddPets';
+import { addPet, initialState } from '../slice';
+import { AddPets } from '../AddPets';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
-import { IPet } from './interfaces';
+import { IPet } from '../interfaces';
 
 const axiosMock = new MockAdapter(axios);
 

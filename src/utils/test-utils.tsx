@@ -30,7 +30,6 @@ type Params = {
 
 export function renderWithProviders(
   ui: React.ReactElement,
-
   { initialState, initialEntries, store = configureTestStore(initialState), ...renderOptions }: Params
 ) {
   const history = createMemoryHistory({ initialEntries });

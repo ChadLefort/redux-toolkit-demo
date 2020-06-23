@@ -6,7 +6,7 @@ import {
   render,
   screen
   } from '@testing-library/react';
-import { PetForm } from './Form';
+import { PetForm } from '../Form';
 
 describe('pets form', () => {
   afterEach(cleanup);

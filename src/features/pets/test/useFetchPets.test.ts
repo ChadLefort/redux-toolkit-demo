@@ -1,9 +1,9 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { HooksWrapper } from 'utils/test-utils';
-import { petsFixture } from './fixtures';
+import { petsFixture } from '../fixtures';
 import { renderHook } from '@testing-library/react-hooks';
-import { useFetchPets } from './useFetchPets';
+import { useFetchPets } from '../useFetchPets';
 
 const axiosMock = new MockAdapter(axios);
 

@@ -9,9 +9,9 @@ import {
   initialState,
   petsReducer,
   removePet
-  } from './slice';
-import { IPet } from './interfaces';
-import { petsFixture } from './fixtures';
+  } from '../slice';
+import { IPet } from '../interfaces';
+import { petsFixture } from '../fixtures';
 import { RootState } from 'app/store';
 
 const mockStore = configureStore<RootState, ThunkDispatch<RootState, unknown, Action<string>>>([thunk]);
