@@ -8,7 +8,7 @@ describe('app', () => {
   afterEach(cleanup);
 
   it('should render the app', async () => {
-    renderWithProviders(<App />, { pets: initialState });
+    renderWithProviders(<App />, { initialState: { pets: initialState } });
 
     expect(screen.getByRole('progressbar')).toBeDefined();
   });

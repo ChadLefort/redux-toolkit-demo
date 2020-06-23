@@ -20,7 +20,10 @@ describe('view pet', () => {
   it('can show a loading bar and then a pet', async () => {
     axiosMock.onGet('/pets').reply(200, petsFixture);
 
-    const { store } = renderWithProviders(<Route path="/:id" component={ViewPet} />, { pets: initialState }, ['/1']);
+    const { store } = renderWithProviders(<Route path="/:id" component={ViewPet} />, {
+      initialState: { pets: initialState },
+      initialEntries: ['/1']
+    });
 
     expect(screen.getByRole('progressbar')).toBeDefined();
 

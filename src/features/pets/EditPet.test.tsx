@@ -37,7 +37,10 @@ describe('edit pet', () => {
     axiosMock.onPut('/pets/1').reply(200, updatedPet);
 
     const store = await actWithReturn(async () => {
-      const { store } = renderWithProviders(<Route path="/edit/:id" component={EditPet} />, initialState, ['/edit/1']);
+      const { store } = renderWithProviders(<Route path="/edit/:id" component={EditPet} />, {
+        initialState,
+        initialEntries: ['/edit/1']
+      });
 
       fireEvent.change(screen.getByTestId('age'), { target: { value: '8' } });
       fireEvent.click(screen.getByText('Submit'));

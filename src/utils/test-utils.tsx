@@ -1,10 +1,11 @@
 import React from 'react';
-import { act, render } from '@testing-library/react';
+import { act, render as rtlRender, RenderOptions } from '@testing-library/react';
 import { configureStore, Dispatch } from '@reduxjs/toolkit';
-import { MemoryRouter as Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { reducer } from 'app/reducer';
 import { RootState, store as origStore } from 'app/store';
+import { Router } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('app/store', () => ({
@@ -21,20 +22,25 @@ function configureTestStore(initialState: Partial<RootState> = {}) {
   return store;
 }
 
+type Params = {
+  initialState: Partial<RootState>;
+  initialEntries?: string[];
+  store?: ReturnType<typeof configureTestStore>;
+} & RenderOptions;
+
 export function renderWithProviders(
   ui: React.ReactElement,
-  initialState: Partial<RootState>,
-  initialEntries?: string[],
-  store = configureTestStore(initialState),
-  rtlRender = render
+
+  { initialState, initialEntries, store = configureTestStore(initialState), ...renderOptions }: Params
 ) {
+  const history = createMemoryHistory({ initialEntries });
   const Wrapper: React.FC = ({ children }) => (
     <Provider store={store}>
-      <Router initialEntries={initialEntries}>{children}</Router>
+      <Router history={history}>{children}</Router>
     </Provider>
   );
 
-  return { ...rtlRender(ui, { wrapper: Wrapper }), store };
+  return { ...rtlRender(ui, { wrapper: Wrapper, ...renderOptions }), store, history };
 }
 
 export async function actWithReturn<T = typeof origStore>(callback: Function) {

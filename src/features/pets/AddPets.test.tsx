@@ -22,7 +22,7 @@ describe('add pets', () => {
     axiosMock.onPost('/pets').reply(200, newPet);
 
     const store = await actWithReturn(async () => {
-      const { store } = renderWithProviders(<AddPets />, { pets: initialState });
+      const { store } = renderWithProviders(<AddPets />, { initialState: { pets: initialState } });
 
       fireEvent.change(screen.getByTestId('name'), { target: { value: 'Pat' } });
       fireEvent.change(screen.getByTestId('age'), { target: { value: '7' } });

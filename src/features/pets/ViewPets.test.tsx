@@ -19,7 +19,7 @@ describe('view pets', () => {
   afterEach(cleanup);
 
   it('can show a loading bar and then pets', async () => {
-    const { store } = renderWithProviders(<ViewPets />, { pets: initialState });
+    const { store } = renderWithProviders(<ViewPets />, { initialState: { pets: initialState } });
 
     expect(screen.getByRole('progressbar')).toBeDefined();
 
@@ -34,7 +34,7 @@ describe('view pets', () => {
   it('allows you to delete a pet', async () => {
     axiosMock.onDelete(`/pets/${petsFixture[1].id}`).reply(200);
 
-    const { store } = renderWithProviders(<ViewPets />, { pets: initialState });
+    const { store } = renderWithProviders(<ViewPets />, { initialState: { pets: initialState } });
 
     expect(screen.getByRole('progressbar')).toBeDefined();
 
