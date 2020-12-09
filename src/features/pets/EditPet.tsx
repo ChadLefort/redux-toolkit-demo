@@ -12,9 +12,8 @@ import {
 import { ErrorIcon } from 'common/ErrorIcon';
 import { IPet } from './interfaces';
 import { PetForm } from './Form';
-import { store } from 'app/store';
-import { updatePet } from './slice';
-import { useAppDispatch } from 'app/reducer';
+import { petsSelectors, updatePet } from './slice';
+import { useAppDispatch, useTypedSelector } from 'app/reducer';
 import { useFetchPets } from './useFetchPets';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -33,9 +32,9 @@ export const EditPet: React.FC = () => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const history = useHistory();
-  const { petsSelectors, isFetching, error } = useFetchPets();
+  const { isFetching, error } = useFetchPets();
   const { id } = useParams<{ id: string }>();
-  const pet = petsSelectors.selectById(store.getState(), id);
+  const pet = useTypedSelector((state) => petsSelectors.selectById(state, id));
 
   const onSubmit = (values: IPet) =>
     new Promise<void>((resolve, reject) => {

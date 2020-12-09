@@ -1,12 +1,11 @@
-import { fetchPets, petsAdapter } from './slice';
-import { RootState, store } from 'app/store';
+import { fetchPets, petsSelectors } from './slice';
+import { store } from 'app/store';
 import { useAppDispatch, useTypedSelector } from 'app/reducer';
 import { useEffect } from 'react';
 
 export function useFetchPets() {
   const dispatch = useAppDispatch();
   const { hasFetched, isFetching, error } = useTypedSelector((state) => state.pets);
-  const petsSelectors = petsAdapter.getSelectors<RootState>((state) => state.pets);
   const pets = petsSelectors.selectAll(store.getState());
 
   useEffect(() => {
@@ -15,5 +14,5 @@ export function useFetchPets() {
     }
   }, [dispatch, hasFetched]);
 
-  return { pets, isFetching, error, petsSelectors };
+  return { pets, isFetching, error };
 }

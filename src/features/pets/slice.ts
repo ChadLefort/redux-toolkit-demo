@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { error, isFetching, State } from 'common/slice';
 import { IPet } from './interfaces';
+import { RootState } from 'app/store';
 
 export const fetchPets = createAsyncThunk<
   IPet[],
@@ -42,6 +43,8 @@ export const removePet = createAsyncThunk('pets/removePets', async (id: number) 
 export const petsAdapter = createEntityAdapter<IPet>({
   sortComparer: (a, b) => a.name.localeCompare(b.name)
 });
+
+export const petsSelectors = petsAdapter.getSelectors<RootState>((state) => state.pets);
 
 export const initialState = petsAdapter.getInitialState<State>({
   hasFetched: false,
