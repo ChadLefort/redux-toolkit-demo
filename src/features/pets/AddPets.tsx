@@ -1,5 +1,4 @@
 import React from 'react';
-import { addPet } from './slice';
 import {
   createStyles,
   Grid,
@@ -10,8 +9,9 @@ import {
   } from '@material-ui/core';
 import { IPet } from './interfaces';
 import { PetForm } from './Form';
-import { useAppDispatch } from 'app/reducer';
+import { postPet } from './api';
 import { useHistory } from 'react-router-dom';
+import { useMutation, useQueryCache } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,13 +26,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const AddPets: React.FC = () => {
   const classes = useStyles();
-  const dispatch = useAppDispatch();
   const history = useHistory();
+  const cache = useQueryCache();
+  const [addPet] = useMutation(postPet, {
+    onSuccess: () => cache.invalidateQueries('pets')
+  });
 
   const onSubmit = (values: IPet) =>
-    new Promise<void>((resolve, reject) => {
+    new Promise<void>(async (resolve, reject) => {
       try {
-        dispatch(addPet(values));
+        await addPet(values);
         history.push('/');
         resolve();
       } catch (error) {

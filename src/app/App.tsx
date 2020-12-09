@@ -1,24 +1,24 @@
+import Brightness4Icon from '@material-ui/icons/Brightness4';
+import Brightness7Icon from '@material-ui/icons/Brightness7';
 import React, { useState } from 'react';
 import {
+  AppBar,
+  Button,
   createMuiTheme,
-  ThemeProvider,
-  CssBaseline,
-  Grid,
-  FormControlLabel,
-  makeStyles,
   createStyles,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  makeStyles,
   Switch,
   Theme as MuiTheme,
-  AppBar,
-  Toolbar,
-  Button
-} from '@material-ui/core';
-import { grey, red } from '@material-ui/core/colors';
-import Brightness7Icon from '@material-ui/icons/Brightness7';
-import Brightness4Icon from '@material-ui/icons/Brightness4';
-import { Provider } from 'react-redux';
-import { store } from './store';
+  ThemeProvider,
+  Toolbar
+  } from '@material-ui/core';
 import { BrowserRouter as Router, NavLink } from 'react-router-dom';
+import { grey, red } from '@material-ui/core/colors';
+import { QueryCache, ReactQueryCacheProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query-devtools';
 import { Routes } from './Routes';
 
 const useStyles = makeStyles((theme: MuiTheme) =>
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: MuiTheme) =>
     },
     button: {
       padding: theme.spacing(2),
-      heigth: '100%'
+      height: '100%'
     },
     formLabel: {
       display: 'flex',
@@ -48,6 +48,7 @@ export const ThemeContext = React.createContext<ThemeContext>({} as ThemeContext
 
 export const App: React.FC = () => {
   const classes = useStyles();
+  const queryCache = new QueryCache();
   const [theme, setTheme] = useState<Theme>('dark');
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
   const muiTheme = createMuiTheme({
@@ -63,7 +64,8 @@ export const App: React.FC = () => {
   });
 
   return (
-    <Provider store={store}>
+    <ReactQueryCacheProvider queryCache={queryCache}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <Router>
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
           <ThemeProvider theme={muiTheme}>
@@ -112,6 +114,6 @@ export const App: React.FC = () => {
           </ThemeProvider>
         </ThemeContext.Provider>
       </Router>
-    </Provider>
+    </ReactQueryCacheProvider>
   );
 };

@@ -2,9 +2,8 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { cleanup, waitForElementToBeRemoved } from '@testing-library/react';
-import { fetchPets, initialState } from '../slice';
-import { getActionResult, renderWithProviders, screen } from '../../../utils/test-utils';
 import { petsFixture } from '../fixtures';
+import { renderWithProviders, screen } from '../../../utils/test-utils';
 import { Route } from 'react-router-dom';
 import { ViewPet } from '../ViewPet';
 
@@ -20,8 +19,7 @@ describe('view pet', () => {
   it('can show a loading bar and then a pet', async () => {
     axiosMock.onGet('/pets').reply(200, petsFixture);
 
-    const { store } = renderWithProviders(<Route path="/:id" component={ViewPet} />, {
-      initialState: { pets: initialState },
+    renderWithProviders(<Route path="/:id" component={ViewPet} />, {
       initialEntries: ['/1']
     });
 
@@ -30,16 +28,12 @@ describe('view pet', () => {
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     expect(screen.getByText(petsFixture[0].name)).toHaveTextContent(petsFixture[0].name);
-
-    const { type } = await getActionResult(store.dispatch);
-    expect(type).toEqual(fetchPets.fulfilled.type);
   });
 
   it('can show a loading bar and then an error', async () => {
     axiosMock.onGet('/pets').reply(500);
 
-    const { store } = renderWithProviders(<Route path="/:id" component={ViewPet} />, {
-      initialState: { pets: initialState },
+    renderWithProviders(<Route path="/:id" component={ViewPet} />, {
       initialEntries: ['/1']
     });
 
@@ -48,8 +42,5 @@ describe('view pet', () => {
     await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
 
     expect(screen.getByTitle('Error')).toBeDefined();
-
-    const { type } = await getActionResult(store.dispatch);
-    expect(type).toEqual(fetchPets.rejected.type);
   });
 });

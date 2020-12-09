@@ -11,10 +11,8 @@ import {
   Theme
   } from '@material-ui/core';
 import { ErrorIcon } from 'common/ErrorIcon';
-import { petsSelectors } from './slice';
-import { useFetchPets } from './useFetchPets';
+import { useFetchPet } from './useFetchPet';
 import { useParams } from 'react-router-dom';
-import { useTypedSelector } from 'app/reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,11 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const ViewPet: React.FC = () => {
   const classes = useStyles();
-  const { isFetching, error } = useFetchPets();
   const { id } = useParams<{ id: string }>();
-  const pet = useTypedSelector((state) => petsSelectors.selectById(state, id));
+  const { pet, isLoading, error } = useFetchPet(id);
 
-  return pet && !isFetching && !error ? (
+  return pet && !isLoading && !error ? (
     <Paper className={classes.paper}>
       <List className={classes.list}>
         <ListItem>

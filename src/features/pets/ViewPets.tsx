@@ -20,11 +20,10 @@ import {
   Theme,
   Typography
   } from '@material-ui/core';
+import { deletePet, getPets } from './api';
 import { ErrorIcon } from 'common/ErrorIcon';
 import { Link } from 'react-router-dom';
-import { removePet } from './slice';
-import { useAppDispatch } from 'app/reducer';
-import { useFetchPets } from './useFetchPets';
+import { useMutation, useQuery, useQueryCache } from 'react-query';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,11 +42,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const ViewPets: React.FC = () => {
   const classes = useStyles();
-  const dispatch = useAppDispatch();
-  const remove = (id: number) => () => dispatch(removePet(id));
-  const { pets, isFetching, error } = useFetchPets();
+  const cache = useQueryCache();
+  const { data: pets, isLoading, error } = useQuery('pets', getPets);
+  const [removePet] = useMutation(deletePet, {
+    onSuccess: () => cache.invalidateQueries('pets')
+  });
 
-  return pets.length && !isFetching && !error ? (
+  return pets?.length && !isLoading && !error ? (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
@@ -72,7 +73,7 @@ export const ViewPets: React.FC = () => {
                 <IconButton component={Link} to={`edit/${pet.id}`}>
                   <EditIcon />
                 </IconButton>
-                <IconButton data-testid={`${pet.name}-delete`} onClick={remove(pet.id)}>
+                <IconButton data-testid={`${pet.name}-delete`} onClick={() => removePet(pet.id)}>
                   <DeleteIcon />
                 </IconButton>
               </TableCell>
@@ -81,7 +82,7 @@ export const ViewPets: React.FC = () => {
         </TableBody>
       </Table>
     </TableContainer>
-  ) : pets.length === 0 && !isFetching && !error ? (
+  ) : pets?.length === 0 && !isLoading && !error ? (
     <Paper className={classes.paper}>
       <Grid container spacing={4}>
         <Grid item xs={12} classes={{ root: classes.item }}>

@@ -1,14 +1,12 @@
 import React from 'react';
 import { App } from './App';
-import { cleanup, screen } from '@testing-library/react';
-import { initialState } from 'features/pets/slice';
-import { renderWithProviders } from 'utils/test-utils';
+import { cleanup, render, screen } from '@testing-library/react';
 
 describe('app', () => {
   afterEach(cleanup);
 
   it('should render the app', async () => {
-    renderWithProviders(<App />, { initialState: { pets: initialState } });
+    render(<App />);
 
     expect(screen.getByRole('progressbar')).toBeDefined();
   });
