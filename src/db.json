@@ -8,15 +8,33 @@
     },
     {
       "name": "PT",
-      "age": "88",
       "type": "Dog",
-      "id": 2
+      "id": 2,
+      "age": "12"
     },
     {
       "name": "Daisy",
       "age": "17",
       "type": "Dog",
       "id": 3
+    },
+    {
+      "name": "Patrick",
+      "age": "2",
+      "type": "Dog",
+      "id": 4
+    },
+    {
+      "name": "Pauly",
+      "age": "5",
+      "type": "Dog",
+      "id": 5
+    },
+    {
+      "name": "Petter",
+      "age": "7",
+      "type": "Cat",
+      "id": 6
     }
   ]
 }

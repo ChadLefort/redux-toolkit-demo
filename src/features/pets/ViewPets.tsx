@@ -1,6 +1,7 @@
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
+import { Autocomplete } from 'features/pets/Autocomplete';
 import {
   Button,
   Container,
@@ -48,58 +49,63 @@ export const ViewPets: React.FC = () => {
     onSuccess: () => cache.invalidateQueries('pets')
   });
 
-  return pets?.length && !isLoading && !error ? (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell align="right">Age</TableCell>
-            <TableCell align="right" />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {pets.map((pet) => (
-            <TableRow key={pet.id}>
-              <TableCell component="th" scope="row">
-                <MuiLink component={Link} to={`/${pet.id}`}>
-                  {pet.name}
-                </MuiLink>
-              </TableCell>
-              <TableCell>{pet.type}</TableCell>
-              <TableCell align="right">{pet.age}</TableCell>
-              <TableCell align="right">
-                <IconButton component={Link} to={`edit/${pet.id}`}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton data-testid={`${pet.name}-delete`} onClick={() => removePet(pet.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  ) : pets?.length === 0 && !isLoading && !error ? (
-    <Paper className={classes.paper}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} classes={{ root: classes.item }}>
-          <Typography>No pets found. Please add one.</Typography>
-        </Grid>
-        <Grid item xs={12} classes={{ root: classes.item }}>
-          <Button color="inherit" component={Link} to="/add">
-            Add Pets
-          </Button>
-        </Grid>
-      </Grid>
-    </Paper>
-  ) : error ? (
-    <ErrorIcon />
-  ) : (
-    <Container>
-      <LinearProgress />
-    </Container>
+  return (
+    <React.Fragment>
+      <Autocomplete />
+      {pets?.length && !isLoading && !error ? (
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell align="right">Age</TableCell>
+                <TableCell align="right" />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {pets.map((pet) => (
+                <TableRow key={pet.id}>
+                  <TableCell component="th" scope="row">
+                    <MuiLink component={Link} to={`/${pet.id}`}>
+                      {pet.name}
+                    </MuiLink>
+                  </TableCell>
+                  <TableCell>{pet.type}</TableCell>
+                  <TableCell align="right">{pet.age}</TableCell>
+                  <TableCell align="right">
+                    <IconButton component={Link} to={`edit/${pet.id}`}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton data-testid={`${pet.name}-delete`} onClick={() => removePet(pet.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : pets?.length === 0 && !isLoading && !error ? (
+        <Paper className={classes.paper}>
+          <Grid container spacing={4}>
+            <Grid item xs={12} classes={{ root: classes.item }}>
+              <Typography>No pets found. Please add one.</Typography>
+            </Grid>
+            <Grid item xs={12} classes={{ root: classes.item }}>
+              <Button color="inherit" component={Link} to="/add">
+                Add Pets
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
+      ) : error ? (
+        <ErrorIcon />
+      ) : (
+        <Container>
+          <LinearProgress />
+        </Container>
+      )}
+    </React.Fragment>
   );
 };
