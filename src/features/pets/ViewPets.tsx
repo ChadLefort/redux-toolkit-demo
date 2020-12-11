@@ -3,6 +3,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import React from 'react';
 import { Autocomplete } from 'features/pets/Autocomplete';
 import {
+  Box,
   Button,
   Container,
   createStyles,
@@ -51,7 +52,10 @@ export const ViewPets: React.FC = () => {
 
   return (
     <React.Fragment>
-      <Autocomplete />
+      <Box pb={2}>
+        <Autocomplete />
+      </Box>
+
       {pets?.length && !isLoading && !error ? (
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="simple table">
